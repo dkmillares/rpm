@@ -423,7 +423,7 @@ class RemoteRepository(object):
 
     def latest_version(self, name):
         versions = self.get_versions(name)
-        return versions[0] if versions else []
+        return versions[0] if versions else None
 
 
 def command_alias(options, args=[]):
@@ -588,6 +588,8 @@ def command_update(options, args):
     for pkg in repo.packages:
         p_local = Package(pkg, volume=options.volume)
         p_remote = remote.latest_version(p_local.name)
+        if p_remote is None:
+            continue
         if version_compare(p_local.version,
                            p_remote.version) >= 0:
             continue
