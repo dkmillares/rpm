@@ -17,10 +17,10 @@ import fnmatch
 from distutils.version import LooseVersion
 
 __author__ = 'Rudá Moura <ruda.moura@gmail.com>'
-__copyright__ = 'Copyright © 2005-2014 Rudix'
+__copyright__ = 'Copyright © 2005-2015 Rudix'
 __credits__ = 'Rudá Moura, Leonardo Santagada'
 __license__ = 'BSD'
-__version__ = '2014.10'
+__version__ = '2015.4'
 
 Volume = os.getenv('VOLUME', '/')
 Vendor = os.getenv('VENDOR', 'org.rudix.pkg')
