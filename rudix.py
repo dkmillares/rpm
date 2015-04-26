@@ -588,11 +588,19 @@ def command_update(options, args):
     for pkg in repo.packages:
         p_local = Package(pkg, volume=options.volume)
         p_remote = remote.latest_version(p_local.name)
+        if options.verbose:
+            print "Processing package %s:" % p_local.name,
         if p_remote is None:
+            if options.verbose:
+                print 'No updates available'
             continue
         if version_compare(p_local.version,
                            p_remote.version) >= 0:
+            if options.verbose:
+                print 'Already in the latest version'
             continue
+        if options.verbose:
+            print 'New version available'
         print '{0:25} {1:10} will be updated to version {2}'.format(p_local.name,
                                                                     p_local.version,
                                                                     p_remote.version)
