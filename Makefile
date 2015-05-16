@@ -1,7 +1,9 @@
+DESTDIR?=/
 PREFIX=/usr/local
 BINDIR=$(PREFIX)/bin
 MANDIR=$(PREFIX)/share/man
 DOCDIR=$(PREFIX)/share/doc/rudix
+PYTHONLIBDIR=/Library/Python/2.7/site-packages
 
 test:
 	python -c 'import rudix'
@@ -13,9 +15,14 @@ rudix.pdf: rudix.1
 
 all: rudix.pdf test
 
-install: test rudix.pdf
-	install -d $(DESTDIR)/$(BINDIR)
-	install -m 755 rudix.py $(DESTDIR)/$(BINDIR)/rudix
+build: rudix.py
+	python setup.py build
+
+install: test rudix.pdf build
+	python setup.py install \
+		--root=$(DESTDIR) \
+		--prefix=$(PREFIX) \
+		--install-lib=$(PYTHONLIBDIR)
 	install -d $(DESTDIR)/$(MANDIR)/man1
 	install -m 644 rudix.1 $(DESTDIR)/$(MANDIR)/man1/rudix.1
 	install -d $(DESTDIR)/$(DOCDIR)
@@ -25,6 +32,8 @@ uninstall:
 	rm -f $(BINDIR)/rudix
 	rm -f $(MANDIR)/man1/rudix.1
 	rm -f $(DOCDIR)/rudix.pdf
+	rm -rf $(PYTHONLIBDIR)/rudix*
 
 clean:
-	rm -f *~ *.pyc *.ps *.pdf
+	python setup.py clean
+	rm -rf *~ *.pyc *.ps *.pdf build dist MANIFEST

@@ -4,3 +4,6 @@
 *.ps
 *.pdf
 *.py?
+build
+dist
+MANIFEST
