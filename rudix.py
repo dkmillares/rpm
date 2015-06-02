@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 '''Rudix Package Manager -- RPM ;D'''
@@ -20,12 +20,12 @@ __author__ = 'Rudá Moura <ruda.moura@gmail.com>'
 __copyright__ = 'Copyright © 2005-2015 Rudix'
 __credits__ = 'Rudá Moura, Leonardo Santagada'
 __license__ = 'BSD'
-__version__ = '2015.5'
+__version__ = '2015.6'
 
 Volume = os.getenv('VOLUME', '/')
 Vendor = os.getenv('VENDOR', 'org.rudix.pkg')
-RudixSite = os.getenv('RUDIX_SITE', 'http://rudix.org')
-RudixVersion = int(os.getenv('RUDIX_VERSION', '2014'))
+RudixSite = os.getenv('RUDIX_SITE', 'https://raw.githubusercontent.com/rudix-mac/packages')
+RudixVersion = int(os.getenv('RUDIX_VERSION', '2015'))
 
 OSX = {'10.6': 'Snow Leopard',
        '10.7': 'Lion',
@@ -35,7 +35,7 @@ OSX = {'10.6': 'Snow Leopard',
 try:
     OSXVersion = platform.mac_ver()[0]
 except:
-    OSXVersion = '10.9'
+    OSXVersion = '10.10'
 OSXVersion = os.getenv('OSX_VERSION', OSXVersion)
 
 if OSXVersion.count('.') == 2:
@@ -239,7 +239,7 @@ class RemotePackage(object):
                  rudix_version=RudixVersion,
                  osx_version=OSXVersion):
         self.package = package
-        url = '{base}/download/{rudix}/{osx}'
+        url = '{base}/{rudix}/{osx}'
         self.url = url.format(base=site_url,
                               rudix=rudix_version,
                               osx=osx_version)
@@ -356,7 +356,7 @@ class RemoteRepository(object):
         self.site_url = site_url
         self.rudix_version = rudix_version
         self.osx_version = osx_version
-        url = '{base}/download/{rudix}/{osx}'
+        url = '{base}/{rudix}/{osx}'
         self.url = url.format(base=self.site_url,
                               rudix=self.rudix_version,
                               osx=self.osx_version)
