@@ -24,7 +24,8 @@ __version__ = '2015.6'
 
 Volume = os.getenv('VOLUME', '/')
 Vendor = os.getenv('VENDOR', 'org.rudix.pkg')
-RudixSite = os.getenv('RUDIX_SITE', 'https://raw.githubusercontent.com/rudix-mac/packages')
+RudixSite = os.getenv(
+    'RUDIX_SITE', 'https://raw.githubusercontent.com/rudix-mac/packages')
 RudixVersion = int(os.getenv('RUDIX_VERSION', '2015'))
 
 OSX = {'10.6': 'Snow Leopard',
@@ -40,6 +41,7 @@ OSXVersion = os.getenv('OSX_VERSION', OSXVersion)
 
 if OSXVersion.count('.') == 2:
     OSXVersion = OSXVersion.rsplit('.', 1)[0]
+
 
 def version_compare(v1, v2):
     'Compare software version'
@@ -57,6 +59,7 @@ def version_compare(v1, v2):
     else:
         return v_cmp
 
+
 def normalize(name):
     'Transform package name in package-id.'
     if name.startswith(Vendor) is False:
@@ -65,13 +68,15 @@ def normalize(name):
         package_id = name
     return package_id
 
+
 def denormalize(package_id):
     'Transform package-id in package name.'
     if package_id.startswith(Vendor):
-        name = package_id[len(Vendor)+1:]
+        name = package_id[len(Vendor) + 1:]
     else:
         name = package_id
     return name
+
 
 def administrator(func):
     'Restrict execution to Administrator (root)'
@@ -83,12 +88,14 @@ def administrator(func):
         new_func = func
     return new_func
 
+
 def communicate(args):
     'Call a process and return its output data as a list of strings.'
     proc = subprocess.Popen(args,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE)
     return proc.communicate()[0].splitlines()
+
 
 def call(args, silent=True):
     'Call a process and return its status.'
@@ -123,7 +130,8 @@ class Package(object):
 
     @property
     def installed(self):
-        cmd = ['pkgutil', '--volume', self.volume, '--pkg-info', self.package_id]
+        cmd = ['pkgutil', '--volume', self.volume,
+               '--pkg-info', self.package_id]
         return call(cmd, silent=True)
 
     @property
@@ -153,7 +161,7 @@ class Package(object):
 
     def get_info(self):
         cmd = ['pkgutil', '-v', '--volume', self.volume,
-                                '--pkg-info', self.package_id]
+               '--pkg-info', self.package_id]
         out = communicate(cmd)
         version = '?'
         install_date = '?'
@@ -167,7 +175,7 @@ class Package(object):
 
     def get_files(self):
         cmd = ['pkgutil', '--volume', self.volume,
-                          '--files', self.package_id]
+               '--files', self.package_id]
         out = communicate(cmd)
         content = [os.path.join(self.volume, line.strip()) for line in out]
         return content
@@ -195,6 +203,7 @@ class Package(object):
             'tmp',
             'usr',
             'var', ]
+
         def is_forbidden(path):
             for pattern in FORBIDDEN:
                 if fnmatch.fnmatch(path, os.path.join(self.volume, pattern)):
@@ -221,7 +230,7 @@ class Package(object):
             if verbose:
                 print "Removing directory '%s'" % x
             try:
-               os.rmdir(x)
+                os.rmdir(x)
             except OSError as err:
                 if verbose:
                     print >> sys.stderr, err
@@ -273,7 +282,8 @@ class RemotePackage(object):
 
     def split(self):
         pat = re.compile(r'^(.+)-([^-]+)-(\d+)\.pkg$')
-        self._name, self._version, self._revision = pat.match(self.package).groups()
+        self._name, self._version, self._revision = pat.match(
+            self.package).groups()
         return self._name, self._version, self._revision
 
     def download(self, store_path=None, verbose=False):
@@ -283,8 +293,8 @@ class RemotePackage(object):
             store_path = file_path
         url = self.url + '/{package}'
         url = url.format(package=self.package)
-        cmd = ['curl', url, '--output', store_path, '--remote-time',
-                            '--continue-at', '-', '--location']
+        cmd = ['curl', url, '--output', store_path,
+               '--remote-time', '--continue-at', '-', '--location']
         if verbose:
             cmd.append('--progress-bar')
         else:
@@ -445,6 +455,7 @@ def command_alias(options, args=[]):
                 sts = 1
     return sts
 
+
 def command_search(options, args=[]):
     'List all available (remote) packages.'
     sts = 0
@@ -468,6 +479,7 @@ def command_search(options, args=[]):
                 sts = 1
     return sts
 
+
 def command_list(options, args):
     'List all installed packages.'
     repo = Repository(options.volume)
@@ -485,6 +497,7 @@ def command_list(options, args):
         else:
             print pkg
     return 0
+
 
 def command_info(options, args=[]):
     'Show information about installed packages.'
@@ -509,6 +522,7 @@ def command_info(options, args=[]):
             print 'Package: %s' % p.package
     return sts
 
+
 def command_files(options, args=[]):
     "Show package's files."
     sts = 0
@@ -525,6 +539,7 @@ def command_files(options, args=[]):
                 continue
             print x
     return sts
+
 
 def command_download(options, args):
     'Download packages from Internet.'
@@ -548,6 +563,7 @@ def command_download(options, args):
                     print >>sys.stderr, "No match for '%s'" % name
                     sts = 1
     return sts
+
 
 @administrator
 def command_install(options, args=[]):
@@ -575,6 +591,7 @@ def command_install(options, args=[]):
                     print >>sys.stderr, "No match for '%s'" % name
                     sts = 1
     return sts
+
 
 @administrator
 def command_update(options, args):
@@ -610,9 +627,10 @@ def command_update(options, args):
     else:
         total = len(to_update)
         for cnt, p in enumerate(to_update):
-            print '[%d/%d] Downloading %s...' % (cnt+1, total, p.package)
+            print '[%d/%d] Downloading %s...' % (cnt + 1, total, p.package)
             repo.remote_install_package(p, options.verbose)
     return 0
+
 
 @administrator
 def command_remove(options, args=[]):
@@ -630,6 +648,7 @@ def command_remove(options, args=[]):
                 print >>sys.stderr, "Package '%s' is not installed" % pkg
             sts = 1
     return sts
+
 
 @administrator
 def command_remove_all(options, args=[]):
@@ -650,6 +669,7 @@ def command_remove_all(options, args=[]):
     # Remember LinuxConf...
     print 'Cry a little tear, because Rudix is not on this machine anymore...'
 
+
 def command_status(options, args):
     'Show repositories status.'
     print 'Rudix %d on OS X %s (%s)' % (RudixVersion,
@@ -667,6 +687,7 @@ def command_status(options, args):
             print '%d alias(es)' % len(remote.aliases)
     return 0
 
+
 def command_search_path(options, args=[]):
     'Search for path in all packages'
     sts = 0
@@ -683,6 +704,7 @@ def command_search_path(options, args=[]):
             print >>sys.stderr, "No match for '%s'" % path
             sts = 1
     return sts
+
 
 def command_freeze(options, args=[]):
     'Output installed packages in package file format.'
