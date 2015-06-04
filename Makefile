@@ -3,7 +3,7 @@ PREFIX=/usr/local
 BINDIR=$(PREFIX)/bin
 MANDIR=$(PREFIX)/share/man
 DOCDIR=$(PREFIX)/share/doc/rudix
-PYTHONLIBDIR=/Library/Python/2.7/site-packages
+PYTHON_SITE_PACKAGES=$(shell python -c 'from distutils.sysconfig import get_python_lib; print(get_python_lib())')
 
 test:
 	python -c 'import rudix'
@@ -22,7 +22,7 @@ install: test rudix.pdf build
 	python setup.py install \
 		--root=$(DESTDIR) \
 		--prefix=$(PREFIX) \
-		--install-lib=$(PYTHONLIBDIR)
+		--install-lib=$(PYTHON_SITE_PACKAGES)
 	install -d $(DESTDIR)/$(MANDIR)/man1
 	install -m 644 rudix.1 $(DESTDIR)/$(MANDIR)/man1/rudix.1
 	install -d $(DESTDIR)/$(DOCDIR)
@@ -32,7 +32,7 @@ uninstall:
 	rm -f $(BINDIR)/rudix
 	rm -f $(MANDIR)/man1/rudix.1
 	rm -f $(DOCDIR)/rudix.pdf
-	rm -rf $(PYTHONLIBDIR)/rudix*
+	rm -rf $(PYTHON_SITE_PACKAGES)/rudix*
 
 clean:
 	python setup.py clean
