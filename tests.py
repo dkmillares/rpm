@@ -22,6 +22,10 @@ class FunctionTests(unittest.TestCase):
         self.assertEqual(version_compare('7.2', '7.2e'), -1)
         self.assertEqual(version_compare('7.2d', '7.2e'), -1)
         self.assertEqual(version_compare('7.2e', '7.4.0'), -1)
+        self.assertEqual(version_compare('1.9a', '2.0'), -1)
+        self.assertEqual(version_compare('1.8.10', '3.0b2'), -1)
+        self.assertEqual(version_compare('2014z', '2015a'), -1)
+        self.assertEqual(version_compare('1.10.1', '1.2'), 1)
 
     def test_sort_version(self):
         l = ['1.0', '1.0-2', '1.0.1', '1.2', '1.7', '1.7.1']
