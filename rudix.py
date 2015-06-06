@@ -91,19 +91,27 @@ def administrator(func):
 
 def communicate(args):
     'Call a process and return its output data as a list of strings.'
-    proc = subprocess.Popen(args,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE)
+    try:
+        proc = subprocess.Popen(args,
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE)
+    except OSError as err:
+        print >> sys.stderr, err, ': ' + ' '.join(args)
+        return []
     return proc.communicate()[0].splitlines()
 
 
 def call(args, silent=True):
     'Call a process and return its status.'
-    if silent:
-        with open('/dev/null') as dev_null:
-            sts = subprocess.call(args, stdout=dev_null, stderr=dev_null)
-    else:
-        sts = subprocess.call(args)
+    try:
+        if silent:
+            with open('/dev/null') as dev_null:
+                sts = subprocess.call(args, stdout=dev_null, stderr=dev_null)
+        else:
+            sts = subprocess.call(args)
+    except OSError as err:
+        print >> sys.stderr, err, ': ' + ' '.join(args)
+        sts = 1
     return True if sts == 0 else False
 
 
