@@ -26,7 +26,7 @@ Volume = os.getenv('VOLUME', '/')
 Vendor = os.getenv('VENDOR', 'org.rudix.pkg')
 RudixSite = os.getenv(
     'RUDIX_SITE', 'https://raw.githubusercontent.com/rudix-mac/packages')
-RudixVersion = int(os.getenv('RUDIX_VERSION', '2015'))
+RudixVersion = os.getenv('RUDIX_VERSION', '2015')
 
 OSX = {'10.6': 'Snow Leopard',
        '10.7': 'Lion',
@@ -672,7 +672,7 @@ def command_remove_all(options, args=[]):
 
 def command_status(options, args):
     'Show repositories status.'
-    print 'Rudix %d on OS X %s (%s)' % (RudixVersion,
+    print 'Rudix %s on OS X %s (%s)' % (RudixVersion,
                                         OSXVersion,
                                         OSX.get(OSXVersion, '?'))
     repo = Repository(options.volume)
