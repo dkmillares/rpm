@@ -20,7 +20,7 @@ __author__ = 'Rudá Moura <ruda.moura@gmail.com>'
 __copyright__ = 'Copyright © 2005-2015 Rudix'
 __credits__ = 'Rudá Moura, Leonardo Santagada'
 __license__ = 'BSD'
-__version__ = '2015.6.1'
+__version__ = '2015.10.20'
 
 Volume = os.getenv('VOLUME', '/')
 Vendor = os.getenv('VENDOR', 'org.rudix.pkg')
