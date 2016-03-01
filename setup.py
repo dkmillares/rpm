@@ -4,13 +4,13 @@
 from distutils.core import setup
 
 with open('README') as f:
-    readme = f.read()
+    README = f.read()
 
 setup(name='rudix',
-      version='2015.10.20',
+      version='2016.2.29',
       license='BSD',
       description='Rudix Package Manager',
-      long_description=readme,
+      long_description=README,
       author='Rudá Moura',
       author_email='ruda.moura@gmail.com',
       url='http://rudix.org/',

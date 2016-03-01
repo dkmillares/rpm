@@ -17,16 +17,16 @@ import fnmatch
 from distutils.version import LooseVersion
 
 __author__ = 'Rudá Moura <ruda.moura@gmail.com>'
-__copyright__ = 'Copyright © 2005-2015 Rudix'
+__copyright__ = 'Copyright © 2005-2016 Rudix'
 __credits__ = 'Rudá Moura, Leonardo Santagada'
 __license__ = 'BSD'
-__version__ = '2015.10.20'
+__version__ = '2016.2.29'
 
 Volume = os.getenv('VOLUME', '/')
 Vendor = os.getenv('VENDOR', 'org.rudix.pkg')
 RudixSite = os.getenv(
     'RUDIX_SITE', 'https://raw.githubusercontent.com/rudix-mac/packages')
-RudixVersion = os.getenv('RUDIX_VERSION', '2015')
+RudixVersion = os.getenv('RUDIX_VERSION', 'master')
 
 OSX = {'10.6': 'Snow Leopard',
        '10.7': 'Lion',
@@ -37,7 +37,7 @@ OSX = {'10.6': 'Snow Leopard',
 try:
     OSXVersion = platform.mac_ver()[0]
 except:
-    OSXVersion = '10.10'
+    OSXVersion = '10.11'
 OSXVersion = os.getenv('OSX_VERSION', OSXVersion)
 
 if OSXVersion.count('.') == 2:
@@ -792,4 +792,3 @@ def main(args=None):
 if __name__ == '__main__':
     sys.exit(main())
 
-# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
