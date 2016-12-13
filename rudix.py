@@ -20,7 +20,7 @@ __author__ = 'Rudá Moura <ruda.moura@gmail.com>'
 __copyright__ = 'Copyright © 2005-2016 Rudix'
 __credits__ = 'Rudá Moura, Leonardo Santagada'
 __license__ = 'BSD'
-__version__ = '2016.2.29'
+__version__ = '2016.12.13'
 
 Volume = os.getenv('VOLUME', '/')
 Vendor = os.getenv('VENDOR', 'org.rudix.pkg')
@@ -33,11 +33,12 @@ OSX = {'10.6': 'Snow Leopard',
        '10.8': 'Mountain Lion',
        '10.9': 'Mavericks',
        '10.10': 'Yosemite',
-       '10.11': 'El Capitan'}
+       '10.11': 'El Capitan',
+       '10.12': 'Sierra'}
 try:
     OSXVersion = platform.mac_ver()[0]
 except:
-    OSXVersion = '10.11'
+    OSXVersion = '10.12'
 OSXVersion = os.getenv('OSX_VERSION', OSXVersion)
 
 if OSXVersion.count('.') == 2:
