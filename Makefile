@@ -28,6 +28,9 @@ install: test rudix.pdf build
 	install -d $(DESTDIR)/$(DOCDIR)
 	install -m 644 rudix.pdf $(DESTDIR)/$(DOCDIR)
 
+upload:
+	python setup.py sdist upload
+
 uninstall:
 	rm -f $(BINDIR)/rudix
 	rm -f $(MANDIR)/man1/rudix.1
