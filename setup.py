@@ -7,7 +7,7 @@ with open('README') as f:
     README = f.read()
 
 setup(name='rudix',
-      version='2016.12.13',
+      version='2017.3.18',
       license='BSD',
       description='Rudix Package Manager',
       long_description=README,

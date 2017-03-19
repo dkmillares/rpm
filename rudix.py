@@ -17,15 +17,14 @@ import fnmatch
 from distutils.version import LooseVersion
 
 __author__ = 'Rudá Moura <ruda.moura@gmail.com>'
-__copyright__ = 'Copyright © 2005-2016 Rudix'
+__copyright__ = 'Copyright © 2005-2017 Rudá Moura (Rudix)'
 __credits__ = 'Rudá Moura, Leonardo Santagada'
 __license__ = 'BSD'
-__version__ = '2016.12.13'
+__version__ = '2017.3.18'
 
 Volume = os.getenv('VOLUME', '/')
 Vendor = os.getenv('VENDOR', 'org.rudix.pkg')
-RudixSite = os.getenv(
-    'RUDIX_SITE', 'https://raw.githubusercontent.com/rudix-mac/packages')
+RudixSite = os.getenv('RUDIX_SITE', 'https://s3.amazonaws.com/rudix.org/packages')
 RudixVersion = os.getenv('RUDIX_VERSION', 'master')
 
 OSX = {'10.6': 'Snow Leopard',
@@ -258,7 +257,7 @@ class RemotePackage(object):
                  rudix_version=RudixVersion,
                  osx_version=OSXVersion):
         self.package = package
-        url = '{base}/{rudix}/{osx}'
+        url = '{base}'
         self.url = url.format(base=site_url,
                               rudix=rudix_version,
                               osx=osx_version)
@@ -291,9 +290,9 @@ class RemotePackage(object):
         return '%s-%s' % (self._version, self._revision)
 
     def split(self):
-        pat = re.compile(r'^(.+)-([^-]+)-(\d+)\.pkg$')
-        self._name, self._version, self._revision = pat.match(
-            self.package).groups()
+        pat = re.compile(r'^(.+)-([^-]+)\.pkg$')
+        self._name, self._version, = pat.match(self.package).groups()
+        self._revision = 999
         return self._name, self._version, self._revision
 
     def download(self, store_path=None, verbose=False):
@@ -376,7 +375,7 @@ class RemoteRepository(object):
         self.site_url = site_url
         self.rudix_version = rudix_version
         self.osx_version = osx_version
-        url = '{base}/{rudix}/{osx}'
+        url = '{base}'
         self.url = url.format(base=self.site_url,
                               rudix=self.rudix_version,
                               osx=self.osx_version)
@@ -789,6 +788,7 @@ def main(args=None):
             args[0] = '--' + command
     (options, args) = parser.parse_args(args)
     return options.command(options, args)
+
 
 if __name__ == '__main__':
     sys.exit(main())
