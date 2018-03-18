@@ -1,6 +1,6 @@
 import unittest
 
-from rudix import *
+from rudix.core import *
 
 class FunctionTests(unittest.TestCase):
 

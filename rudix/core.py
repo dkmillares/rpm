@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 '''Rudix Package Manager -- RPM ;D'''
@@ -788,8 +787,3 @@ def main(args=None):
             args[0] = '--' + command
     (options, args) = parser.parse_args(args)
     return options.command(options, args)
-
-
-if __name__ == '__main__':
-    sys.exit(main())
-
