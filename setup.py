@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from distutils.core import setup
+from setuptools import setup, find_packages
+from rudix import VERSION
 
 with open('README') as f:
     README = f.read()
 
 setup(name='rudix',
-      version='2017.3.18',
+      version=VERSION,
       license='BSD',
       description='Rudix Package Manager',
       long_description=README,
@@ -15,11 +16,12 @@ setup(name='rudix',
       author_email='ruda.moura@gmail.com',
       url='http://rudix.org/',
       keywords='package manager',
-      classifiers = ["Programming Language :: Python", 
+      classifiers = ["Programming Language :: Python",
                      "License :: OSI Approved :: BSD License",
                      "Environment :: MacOS X",
                      "Operating System :: MacOS :: MacOS X",
                      "Topic :: System :: Installation/Setup",
                      "Topic :: System :: Software Distribution"],
-      scripts=["rudix"],
+      packages=find_packages(),
+      entry_points={'console_scripts': ['rudix = rudix.main:main']}
 )

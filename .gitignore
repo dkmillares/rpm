@@ -6,4 +6,4 @@
 *.py?
 build
 dist
-MANIFEST
+rudix.egg-info

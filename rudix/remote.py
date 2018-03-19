@@ -1,4 +1,9 @@
-from .core import RudixSite, RudixVersion, OSXVersion, administrator, communicate
+import sys
+import os
+import re
+import tempfile
+
+from .core import RudixSite, RudixVersion, OSXVersion, administrator, call, call_with_output
 
 
 class RemotePackage(object):
@@ -11,7 +16,7 @@ class RemotePackage(object):
                  rudix_version=RudixVersion,
                  osx_version=OSXVersion):
         self.package = package
-        url = '{base}'
+        url = '{base}/{rudix}'
         self.url = url.format(base=site_url,
                               rudix=rudix_version,
                               osx=osx_version)
@@ -79,7 +84,7 @@ class RemoteRepository(object):
         self.site_url = site_url
         self.rudix_version = rudix_version
         self.osx_version = osx_version
-        url = '{base}'
+        url = '{base}/{rudix}'
         self.url = url.format(base=self.site_url,
                               rudix=self.rudix_version,
                               osx=self.osx_version)
@@ -96,7 +101,7 @@ class RemoteRepository(object):
     def _retrieve_manifest(self):
         url = self.url + '/00MANIFEST.txt'
         cmd = ['curl', '-s', url]
-        content = communicate(cmd)
+        content = call_with_output(cmd)
         if not content:
             return False
         for line in content:
@@ -107,7 +112,7 @@ class RemoteRepository(object):
     def _retrieve_aliases(self):
         url = self.url + '/00ALIASES.txt'
         cmd = ['curl', '-s', url]
-        content = communicate(cmd)
+        content = call_with_output(cmd)
         if not content:
             return False
         for line in content:

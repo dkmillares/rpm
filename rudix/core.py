@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 
-'''Rudix Package Manager -- RPM ;D'''
-
 import sys
 import os
 import re
 import subprocess
 import platform
+import fnmatch
 
 from distutils.version import LooseVersion
 
 __author__ = 'Rudá Moura <ruda.moura@gmail.com>'
-__copyright__ = 'Copyright © 2005-2017 Rudá Moura (Rudix)'
+__copyright__ = 'Copyright © 2005-2018 Rudá Moura'
 __credits__ = 'Rudá Moura, Leonardo Santagada'
 __license__ = 'BSD'
-__version__ = '2017.3.18'
+__version__ = '2018.3'
 
 Volume = os.getenv('VOLUME', '/')
 Vendor = os.getenv('VENDOR', 'org.rudix.pkg')
-RudixSite = os.getenv('RUDIX_SITE', 'https://s3.amazonaws.com/rudix.org/packages')
+RudixSite = os.getenv(
+    'RUDIX_SITE', 'https://raw.githubusercontent.com/rudix-mac/pkg')
 RudixVersion = os.getenv('RUDIX_VERSION', 'master')
 
 OSX = {'10.6': 'Snow Leopard',
@@ -27,15 +27,46 @@ OSX = {'10.6': 'Snow Leopard',
        '10.9': 'Mavericks',
        '10.10': 'Yosemite',
        '10.11': 'El Capitan',
-       '10.12': 'Sierra'}
+       '10.12': 'Sierra',
+       '10.13': 'High Sierra'}
 try:
     OSXVersion = platform.mac_ver()[0]
 except:
-    OSXVersion = '10.12'
+    OSXVersion = '(unknown)'
 OSXVersion = os.getenv('OSX_VERSION', OSXVersion)
 
 if OSXVersion.count('.') == 2:
     OSXVersion = OSXVersion.rsplit('.', 1)[0]
+
+FORBIDDEN = [
+    'Applications',
+    'Library',
+    'Library/Python',
+    'Library/Python/2.?',
+    'Library/Python/2.?/site-packages',
+    'Network',
+    'System',
+    'Users',
+    'Volumes',
+    'bin',
+    'cores',
+    'dev',
+    'etc',
+    'home',
+    'mach_kernel'
+    'net',
+    'private',
+    'sbin',
+    'tmp',
+    'usr',
+    'var', ]
+
+
+def is_forbidden(path, volume=Volume):
+    for pattern in FORBIDDEN:
+        if fnmatch.fnmatch(path, os.path.join(volume, pattern)):
+            return True
+    return False
 
 
 def version_compare(v1, v2):
@@ -84,7 +115,7 @@ def administrator(func):
     return new_func
 
 
-def communicate(args):
+def call_with_output(args):
     'Call a process and return its output data as a list of strings.'
     try:
         proc = subprocess.Popen(args,

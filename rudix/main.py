@@ -289,12 +289,7 @@ def command_freeze(options, args=[]):
         print Package(pkg, volume=options.volume).package
 
 
-def main(args=None):
-    if args is None:
-        args = sys.argv[1:]
-    usage = 'Usage: %prog command [options] [arguments]'
-    version = 'Rudix Package Manager (%prog) version ' + __version__ + '\n'
-    version += __copyright__
+def create_parser(usage, version):
     parser = optparse.OptionParser(usage=usage,
                                    version=version)
     parser.add_option('-v', '--verbose', action='store_true', default=False,
@@ -347,10 +342,25 @@ def main(args=None):
                         help='freeze package list.')
     parser.add_option_group(commands)
     parser.set_defaults(command=command_list)
-    # Allow commands without dashes
+    return parser
+
+
+def main(args=None):
+    if args is None:
+        args = sys.argv[1:]
+    usage = 'Usage: %prog command [options] [arguments]'
+    version = 'Rudix Package Manager (%prog) version ' + __version__ + '\n'
+    version += __copyright__
+    parser = create_parser(usage, version)
+    # Allow commands as options without dashes
     if args:
         command = args[0]
         if command.startswith('-') is False:
             args[0] = '--' + command
     (options, args) = parser.parse_args(args)
-    return options.command(options, args)
+    try:
+        status = options.command(options, args)
+    except KeyboardInterrupt:
+        print >> sys.stderr, '\nInterrupted!'
+        status = 1
+    return status

@@ -1,7 +1,7 @@
+import sys
 import os
-import fnmatch
 
-from .core import Vendor, communicate, denormalize, call
+from .core import Vendor, call_with_output, denormalize, call, is_forbidden
 
 
 class Package(object):
@@ -59,9 +59,9 @@ class Package(object):
     def get_info(self):
         cmd = ['pkgutil', '-v', '--volume', self.volume,
                '--pkg-info', self.package_id]
-        out = communicate(cmd)
-        version = '?'
-        install_date = '?'
+        out = call_with_output(cmd)
+        self._version = '(none)'
+        self._install_date = '(none)'
         for line in out:
             line = line.strip()
             if line.startswith('version: '):
@@ -73,42 +73,14 @@ class Package(object):
     def get_files(self):
         cmd = ['pkgutil', '--volume', self.volume,
                '--files', self.package_id]
-        out = communicate(cmd)
+        out = call_with_output(cmd)
         content = [os.path.join(self.volume, line.strip()) for line in out]
         return content
 
     def uninstall(self, verbose=False):
-        FORBIDDEN = [
-            'Applications',
-            'Library',
-            'Library/Python',
-            'Library/Python/2.?',
-            'Library/Python/2.?/site-packages',
-            'Network',
-            'System',
-            'Users',
-            'Volumes',
-            'bin',
-            'cores',
-            'dev',
-            'etc',
-            'home',
-            'mach_kernel'
-            'net',
-            'private',
-            'sbin',
-            'tmp',
-            'usr',
-            'var', ]
-
-        def is_forbidden(path):
-            for pattern in FORBIDDEN:
-                if fnmatch.fnmatch(path, os.path.join(self.volume, pattern)):
-                    return True
-            return False
         dirs = []
         for x in self.files:
-            if is_forbidden(x):
+            if is_forbidden(x, self.volume):
                 if verbose:
                     print "Skipping '%s'" % x
                 continue
@@ -158,7 +130,7 @@ class Repository(object):
     def get_packages(self):
         cmd = ['pkgutil', '--volume', self.volume,
                '--pkgs=' + self.vendor + '.*']
-        out = communicate(cmd)
+        out = call_with_output(cmd)
         self.packages = [line.strip() for line in out]
         return self.packages
 
@@ -177,7 +149,7 @@ class Repository(object):
     def search_path(self, path):
         'Search for path in all packages'
         packages = []
-        out = communicate(['pkgutil', '--file-info', path])
+        out = call_with_output(['pkgutil', '--file-info', path])
         for line in out:
             line = line.strip()
             if line.startswith('pkgid: '):
