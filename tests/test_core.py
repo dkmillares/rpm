@@ -1,7 +1,7 @@
 import unittest
 
 from rudix.core import *
-from rudix.local import *
+
 
 class FunctionTests(unittest.TestCase):
 
@@ -47,15 +47,6 @@ class FunctionTests(unittest.TestCase):
         self.assertEqual(denormalize('org.rudix.pkg.rudix'), 'rudix')
         self.assertEqual(denormalize('rudix'), 'rudix')
 
-class PackageTests(unittest.TestCase):
-
-    def setUp(self):
-        self.xyz = Package('org.rudix.pkg.xyz')
-        self.foo = Package('org.rudix.pkg.static-foo')
-
-    def test_name(self):
-        self.assertEqual(self.xyz.name, 'xyz')
-        self.assertEqual(self.foo.name, 'static-foo')
 
 if __name__ == '__main__':
     unittest.main()

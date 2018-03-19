@@ -7,7 +7,8 @@ PYTHON_SITE_PACKAGES=$(shell python -c 'from distutils.sysconfig import get_pyth
 
 test:
 	python -c 'import rudix'
-	python tests.py
+	python -c 'from rudix import core, local, remote'
+	python -m unittest discover tests
 
 rudix.pdf: rudix.1
 	groff  -Tps  -mandoc -c rudix.1 > rudix.ps
@@ -39,4 +40,5 @@ uninstall:
 
 clean:
 	python setup.py clean
-	rm -rf *~ *.pyc *.ps *.pdf build dist MANIFEST
+	rm -rf *~ *.ps *.pdf build dist MANIFEST
+	rm -rf rudix/*~ rudix/*.pyc
